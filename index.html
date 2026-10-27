@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <title>Панель методиста</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">М</div><div><strong>Методист</strong><small>Рабочая панель</small></div></div>
+      <nav>
+        <button class="nav-item active" data-view="overview"><span>▦</span> Обзор</button>
+        <button class="nav-item" data-view="imports"><span>⇧</span> Импорт Excel</button>
+        <button class="nav-item" data-view="sheets"><span>▤</span> Листы и данные</button>
+        <button class="nav-item" data-view="tasks"><span>✓</span> Задачи и контроль</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="status-dot"></span> Локальная обработка файлов <small>Файлы не отправляются на сервер</small></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow">УПРАВЛЕНИЕ ОБУЧЕНИЕМ</p><h1 id="page-title">Обзор</h1></div>
+        <div class="top-actions"><span class="pill"><span class="status-dot"></span> Локальный режим</span><button class="button button-primary" id="top-import">＋ Загрузить Excel</button></div>
+      </header>
+
+      <section class="view active" id="view-overview">
+        <div class="welcome">
+          <div><p class="eyebrow light">ПАНЕЛЬ МЕТОДИСТА · MVP</p><h2>Вся методическая работа<br>в одном месте.</h2><p>Начни с загрузки двух рабочих таблиц. Приложение разберёт структуру, покажет листы и поможет подготовить данные к автоматизации.</p><button class="button button-light" id="welcome-import">Загрузить файлы <span>→</span></button></div>
+          <div class="welcome-graphic" aria-hidden="true"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="graphic-card"><span class="mini-label">ОТЧЁТНЫЙ ПЕРИОД</span><strong>Еженедельно</strong><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><small>Данные после импорта</small></div></div>
+        </div>
+        <div class="section-heading"><div><h3>Рабочая сводка</h3><p>Показатели появятся после импорта файлов</p></div><span class="muted" id="last-import">Файлы не загружены</span></div>
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-top"><span>Файлы обработаны</span><span class="metric-icon blue">▤</span></div><strong id="metric-files">0</strong><small>Excel-книг</small></article>
+          <article class="metric-card"><div class="metric-top"><span>Листы обнаружены</span><span class="metric-icon purple">▦</span></div><strong id="metric-sheets">0</strong><small>Во всех книгах</small></article>
+          <article class="metric-card"><div class="metric-top"><span>Строк данных</span><span class="metric-icon green">↕</span></div><strong id="metric-rows">0</strong><small>Приблизительная оценка</small></article>
+          <article class="metric-card"><div class="metric-top"><span>Листы требуют проверки</span><span class="metric-icon orange">!</span></div><strong id="metric-review">0</strong><small>По структуре и чувствительным данным</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Последние импорты</h3><p>История текущей сессии браузера</p></div><button class="text-button" data-goto="imports">Все импорты →</button></div>
+            <div id="recent-imports" class="empty-state"><div class="empty-icon">⇧</div><strong>Пока нет загруженных файлов</strong><p>Загрузи «Елабуга.xlsx» и «Еженедельный отчет.xlsx».</p></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h3>Следующие шаги</h3><p>План запуска MVP</p></div></div>
+            <ul class="check-list"><li><span class="check">1</span><div><strong>Импортировать Excel</strong><small>Проверить структуру книг</small></div></li><li><span class="check">2</span><div><strong>Сверить показатели</strong><small>Не считать значения до проверки формул</small></div></li><li><span class="check">3</span><div><strong>Собрать отчёт</strong><small>После подтверждения источников данных</small></div></li></ul>
+          </article>
+        </div>
+        <div class="notice"><strong>Важно о конфиденциальности</strong><p>Книги читаются в браузере и не загружаются на GitHub или другой сервер. Но браузерная обработка не заменяет защиту устройства: не используйте общий компьютер и не публикуйте исходные Excel-файлы в репозитории.</p></div>
+      </section>
+
+      <section class="view" id="view-imports">
+        <div class="section-heading"><div><h3>Импорт Excel</h3><p>Добавь одну или несколько книг формата .xlsx, .xls или .csv.</p></div></div>
+        <label class="dropzone" id="dropzone"><input type="file" id="file-input" accept=".xlsx,.xls,.csv" multiple hidden><span class="upload-icon">⇧</span><strong>Перетащи файлы сюда</strong><span>или <u>выбери на компьютере</u></span><small>Файлы анализируются локально в браузере</small></label>
+        <div class="notice"><strong>Перед импортом</strong><p>Не включай в репозиторий рабочие Excel-файлы. Приложение не отправляет содержимое книг на сервер, но не сохраняй конфиденциальные данные на общедоступном устройстве.</p></div>
+        <div class="section-heading compact"><div><h3>Загруженные книги</h3><p id="import-count">0 файлов</p></div><button class="button button-outline" id="clear-imports">Очистить сессию</button></div>
+        <div id="imports-list" class="table-wrap"><div class="empty-state">Загруженных файлов пока нет.</div></div>
+      </section>
+
+      <section class="view" id="view-sheets">
+        <div class="section-heading"><div><h3>Листы и данные</h3><p>Инвентаризация листов, приблизительный размер и потенциальные риски.</p></div><button class="button button-outline" id="export-inventory" disabled>Экспорт карты CSV</button></div>
+        <div class="filters"><input id="sheet-search" type="search" placeholder="Поиск по файлу или листу…"><select id="risk-filter"><option value="all">Все листы</option><option value="review">Требуют проверки</option><option value="sensitive">Возможны чувствительные данные</option></select></div>
+        <div id="sheets-table" class="table-wrap"><div class="empty-state">Сначала загрузи Excel-файлы.</div></div>
+        <div id="sheet-preview" class="panel preview-panel hidden"><div class="panel-heading"><div><h3 id="preview-title">Предварительный просмотр</h3><p>Показываются первые строки; возможные чувствительные значения маскируются.</p></div><button class="icon-button" id="close-preview" aria-label="Закрыть">×</button></div><div id="preview-content" class="table-wrap"></div></div>
+      </section>
+
+      <section class="view" id="view-tasks">
+        <div class="section-heading"><div><h3>Задачи и контроль</h3><p>Локальный список задач для планирования работы методиста.</p></div></div>
+        <form id="task-form" class="task-form"><input id="task-title" required maxlength="140" placeholder="Например, сверить отчёт по Елабуге"><input id="task-date" type="date"><select id="task-priority"><option value="Обычный">Обычный приоритет</option><option value="Высокий">Высокий приоритет</option></select><button class="button button-primary" type="submit">Добавить задачу</button></form>
+        <div class="notice"><strong>Хранение задач</strong><p>Задачи хранятся только в текущем браузере на этом устройстве. Это MVP без аккаунтов и облачной синхронизации.</p></div>
+        <div id="tasks-list" class="task-list"></div>
+      </section>
+
+      <footer><span>Панель методиста · MVP на JavaScript</span><span>GitHub Pages ready</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>
